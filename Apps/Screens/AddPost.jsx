@@ -6,18 +6,26 @@ import {
   TouchableOpacity,
   Image,
   ToastAndroid,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore";
 import { app } from "../../firebaseConfig";
 import { Formik } from "formik";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { useUser } from "@clerk/clerk-expo";
 
 export default function AddPost() {
   const db = getFirestore(app);
+  const storage = getStorage();
+  const { user } = useUser();
   const [categoryList, setCategoryList] = useState([]);
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     getCategoryList();
   }, []);
@@ -49,10 +57,37 @@ export default function AddPost() {
     }
   };
 
-  const onSubmitMethod = (value) => {
-    value.image = image;
-    console.log(value);
+  const onSubmitMethod = async (values, { resetForm }) => {
+    setLoading(true);
+    //convert uri to Blob File
+    const resp = await fetch(image);
+    const blob = await resp.blob();
+    const storageRef = ref(storage, "AddPost/" + Date.now() + ".jpg");
+    // 'file' comes from the Blob or File API
+    uploadBytes(storageRef, blob)
+      .then((snapshot) => {
+        console.log("Uploaded a blob or file!");
+      })
+      .then((resp) => {
+        getDownloadURL(storageRef).then(async (downloadUrl) => {
+          console.log(downloadUrl);
+          values.image = downloadUrl;
+          values.userName = user.fullName;
+          values.userEmail = user.primaryEmailAddress.emailAddress;
+          values.userImage = user.imageUrl;
+
+          const docRef = await addDoc(collection(db, "UserPost"), values);
+
+          if (docRef.id) {
+            setLoading(false);
+            Alert.alert("Success", "Post Added Successfully");
+            resetForm(); // Reset the form fields
+            setImage(null); // Clear the selected image
+          }
+        });
+      });
   };
+
   return (
     <View className="p-10">
       <Text className="font-bold text-[27px]">Add New Post</Text>
@@ -67,8 +102,11 @@ export default function AddPost() {
           address: "",
           price: "",
           image: "",
+          userName: "",
+          userEmail: "",
+          userImage: "",
         }}
-        onSubmit={(value) => onSubmitMethod(value)}
+        onSubmit={onSubmitMethod}
         validate={(values) => {
           const errors = {};
           if (!values.title) {
@@ -85,6 +123,7 @@ export default function AddPost() {
           values,
           setFieldValue,
           errors,
+          resetForm,
         }) => (
           <View>
             <TouchableOpacity onPress={pickImage}>
@@ -145,9 +184,17 @@ export default function AddPost() {
             </View>
             <TouchableOpacity
               onPress={handleSubmit}
+              style={{ backgroundColor: loading ? "#ccc" : "#007BFF" }}
+              disabled={loading}
               className="bg-blue-500 p-4 rounded-full mt-7"
             >
-              <Text className="text-white text-center text-[16px]">Submit</Text>
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text className="text-white text-center text-[16px]">
+                  Submit
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         )}
