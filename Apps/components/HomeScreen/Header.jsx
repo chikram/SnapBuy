@@ -20,7 +20,7 @@ export default function Header() {
         </View>
       </View>
       {/*searchBar*/}
-      <View className="p-3 flex-row items-center mt-5 bg-white rounded-full border-[1px] border-black ">
+      <View className="p-2 flex-row items-center m-2 bg-blue-50 rounded-full  border-[1px] border-black ">
         <Ionicons name="search" size={24} color="gray" />
         <TextInput placeholder="Search" className="ml-2 text-[18px]" />
       </View>

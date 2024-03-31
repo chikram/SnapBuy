@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Categories({ categoryList }) {
   return (
-    <View className="mt-3">
+    <View className="mt-2">
       <Text className="font-bold text-[20px]">Categories</Text>
       <FlatList
         data={categoryList}

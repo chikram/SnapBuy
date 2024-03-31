@@ -35,7 +35,6 @@ export default function AddPost() {
     setCategoryList([]);
     const querySnapshot = await getDocs(collection(db, "Category"));
     querySnapshot.forEach((doc) => {
-      console.log("Docs:", doc.data());
       setCategoryList((categoryList) => [...categoryList, doc.data()]);
     });
   };
