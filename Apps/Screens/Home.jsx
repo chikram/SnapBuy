@@ -30,7 +30,6 @@ export default function Home() {
     setCategoryList([]);
     const querySnapshot = await getDocs(collection(db, "Category"));
     querySnapshot.forEach((doc) => {
-      console.log("Docs:", doc.data());
       setCategoryList((categoryList) => [...categoryList, doc.data()]);
     });
   };
@@ -43,11 +42,14 @@ export default function Home() {
     });
   };
   return (
-    <ScrollView className="py-8 px-2  bg-white flex-1">
+    <ScrollView className=" px-2  bg-white flex-1">
       <Header />
       <Slider sliderList={sliderList} />
       <Categories categoryList={categoryList} />
-      <LatestitemList latestItemList={latestItemList} />
+      <LatestitemList
+        latestItemList={latestItemList}
+        heading={"Latest Items"}
+      />
     </ScrollView>
   );
 }

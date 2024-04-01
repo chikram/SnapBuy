@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <View>
       {/*user info section */}
-      <View className="p-2 flex flex-row items-center gap-2">
+      <View className="p-2 pt-[8%] flex flex-row items-center gap-2">
         <Image
           source={{ uri: user?.imageUrl }}
           className="rounded-full w-10 h-10"
