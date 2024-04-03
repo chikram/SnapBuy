@@ -1,9 +1,15 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 export default function PostItems({ item }) {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity className="flex-1 m-2 p-2 rounded-lg border-[1px] border-slate-200">
+    <TouchableOpacity
+      className="flex-1 m-2 p-2 rounded-lg
+       border-[1px] border-slate-200"
+      onPress={() => navigation.push("Item-detail", { product: item })}
+    >
       <Image
         source={{ uri: item?.image }}
         className="h-[140px] w-full rounded-lg"
@@ -13,7 +19,10 @@ export default function PostItems({ item }) {
         <Text className="text-[20px] font-bold text-blue-500">
           ${item.price}
         </Text>
-        <Text className="bg-blue-300 text-blue-600 w-[70px] p-[2px] px-2 rounded-full text-center text-[10px]">
+        <Text
+          className="bg-blue-300 text-blue-600 w-[70px] 
+           p-[2px] px-2 rounded-full text-center text-[10px]"
+        >
           {item.category}
         </Text>
       </View>
