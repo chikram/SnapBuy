@@ -8,7 +8,6 @@ export default function LatestitemList({ latestItemList, heading }) {
       <Text className="font-bold text-[20px]">{heading}</Text>
       <FlatList
         data={latestItemList}
-        numColumns={2}
         renderItem={({ item, index }) => <PostItems item={item} />}
       />
     </View>

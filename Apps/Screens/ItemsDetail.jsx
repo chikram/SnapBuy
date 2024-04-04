@@ -5,17 +5,47 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
+  Share,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function ItemsDetail() {
+export default function ItemsDetail({ navigation }) {
   const { params } = useRoute();
   const [product, setProduct] = useState([]);
 
   useEffect(() => {
     params && setProduct(params.product);
-  }, [params]);
+    shareButton();
+  }, [params, navigation]);
+  //for share button
+
+  const shareButton = () => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Ionicons
+          name="share-social-sharp"
+          size={24}
+          color="white"
+          style={{ marginRight: 15 }}
+          onPress={() => sharePruct()}
+        />
+      ),
+    });
+  };
+
+  const sharePruct = () => {
+    const content = { message: product.title + "\n" + product.desc };
+    Share.share(content).then(
+      (res) => {
+        console.log(res);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
 
   const sendEmailMessage = () => {
     const subject = "Regarding " + product.title;
