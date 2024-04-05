@@ -6,45 +6,25 @@ export default function PostItems({ item }) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        margin: 2,
-        padding: 5,
-        borderRadius: 8,
-        marginTop: 10,
-        borderWidth: 1,
-        borderColor: "#ccc",
-        backgroundColor: "#fff",
-        minHeight: 150,
-      }}
+      className="flex-1 flex-row m-2 rounded-lg
+       border-[1px] border-slate-200"
       onPress={() => navigation.push("Item-detail", { product: item })}
     >
       <Image
         source={{ uri: item?.image }}
-        style={{
-          height: 140,
-          width: 170,
-          borderRadius: 8,
-        }}
+        className="h-[140px] w-[180px] rounded-lg"
       />
-      <View style={{ marginLeft: 8, flex: 1 }}>
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.title}</Text>
-        <Text style={{ fontWeight: "bold" }}>By {item.userName}</Text>
-        <Text style={{ fontSize: 14, marginTop: 4 }} numberOfLines={4}>
-          {item.desc}
+      <View className="mx-4">
+        <Text className="text-[17px] font-bold mt-1">{item.title}</Text>
+        <Text className="text-[20px] font-bold text-blue-500">
+          ${item.price}
         </Text>
-        <View style={{ flex: 1, justifyContent: "flex-end" }}>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: "bold",
-              color: "black",
-            }}
-          >
-            ${item.price}
-          </Text>
-        </View>
+        <Text
+          className="bg-blue-300 text-blue-600 w-[70px] 
+           p-[2px] px-2 rounded-full text-center text-[10px]"
+        >
+          {item.category}
+        </Text>
       </View>
     </TouchableOpacity>
   );
