@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Explore from "../Screens/Explore";
 import Profile from "../Screens/Profile";
 import AddPost from "../Screens/AddPost";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreenStackNav from "./HomeScreenStackNav";
+import ExploreScreenNav from "./ExploreScreenNav";
 
 const Tab = createBottomTabNavigator();
 export default function TabNavigation() {
@@ -38,7 +38,7 @@ export default function TabNavigation() {
       />
       <Tab.Screen
         name="explore"
-        component={Explore}
+        component={ExploreScreenNav}
         options={{
           tabBarLabel: ({ color }) => (
             <Text
