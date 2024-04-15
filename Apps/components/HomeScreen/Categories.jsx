@@ -20,7 +20,7 @@ export default function Categories({ categoryList }) {
               })
             }
             className="flex-1 items-center 
-          justify-center p-2 border-[1px] border-blue-200
+          justify-center p-2 border-[1px]
           bg-blue-50  m-1 h-[80px] rounded-lg"
           >
             <Image source={{ uri: item?.icon }} className="h-[40px] w-[40px]" />

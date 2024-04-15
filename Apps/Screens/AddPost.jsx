@@ -51,8 +51,6 @@ export default function AddPost() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -107,6 +105,7 @@ export default function AddPost() {
             userName: "",
             userEmail: "",
             userImage: "",
+            createdAt: Date.now(),
           }}
           onSubmit={onSubmitMethod}
           validate={(values) => {

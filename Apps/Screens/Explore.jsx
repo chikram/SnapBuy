@@ -27,9 +27,11 @@ export default function Explore() {
     });
   };
   return (
-    <ScrollView className="p-5 py-8">
-      <Text className="text-[30px] font-bold">Explore More</Text>
-      <LatestitemList latestItemList={productList} />
-    </ScrollView>
+    <>
+      <Text className="text-[30px] font-bold m-5">Explore More</Text>
+      <ScrollView className="-mt-5 px-3">
+        <LatestitemList latestItemList={productList} className="-pt-5" />
+      </ScrollView>
+    </>
   );
 }
