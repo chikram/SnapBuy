@@ -6,15 +6,29 @@ import {
   TouchableOpacity,
   Linking,
   Share,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useUser } from "@clerk/clerk-expo";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
+import { app } from "../../firebaseConfig";
 
 export default function ItemsDetail({ navigation }) {
   const { params } = useRoute();
   const [product, setProduct] = useState([]);
-
+  const { user } = useUser();
+  const db = getFirestore(app);
+  const nav = useNavigation();
   useEffect(() => {
     params && setProduct(params.product);
     shareButton();
@@ -55,6 +69,34 @@ export default function ItemsDetail({ navigation }) {
       "mailto:" + product.userEmail + "?subject=" + subject + "&body=" + body
     );
   };
+  const deleteUserPost = () => {
+    Alert.alert("Do you want to Delete?", "Are you want to Delete this Post", [
+      {
+        text: "Yes",
+        onPress: () => deleteFromFireStore(),
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log("cancel"),
+        style: "cancel",
+      },
+    ]);
+  };
+
+  //to delete product
+  const deleteFromFireStore = async () => {
+    const q = query(
+      collection(db, "UserPost"),
+      where("title", "==", product.title)
+    );
+    const snapshot = await getDocs(q);
+    snapshot.forEach((doc) => {
+      deleteDoc(doc.ref).then((res) => {
+        nav.goBack();
+      });
+    });
+  };
+
   return (
     <ScrollView className="bg-white">
       <Image source={{ uri: product.image }} className="h-[350px] w-full" />
@@ -83,12 +125,21 @@ export default function ItemsDetail({ navigation }) {
           <Text>{product.userEmail}</Text>
         </View>
       </View>
-      <TouchableOpacity
-        onPress={() => sendEmailMessage()}
-        className="z-40 rounded-full bg-blue-500 p-4 m-2"
-      >
-        <Text className="text-center text-white ">Send Message</Text>
-      </TouchableOpacity>
+      {user?.primaryEmailAddress.emailAddress == product.userEmail ? (
+        <TouchableOpacity
+          onPress={() => deleteUserPost()}
+          className="z-40 rounded-full bg-red-500 p-4 m-2"
+        >
+          <Text className="text-center text-white ">Delete Post</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => sendEmailMessage()}
+          className="z-40 rounded-full bg-blue-500 p-4 m-2"
+        >
+          <Text className="text-center text-white ">Send Message</Text>
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 }
